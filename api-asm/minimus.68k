@@ -1,0 +1,94 @@
+;****************************************************************************
+; Memory addresses related to the Z80
+;****************************************************************************
+
+MiniMusic_Z80Prog:      equ $A00000     ; Where Z80 program is loaded
+MiniMusic_Z80Data:      equ $A00800     ; Where music data is loaded
+MiniMusic_Z80BusReq:    equ $A11100     ; Z80 bus request register
+MiniMusic_Z80Reset:     equ $A11200     ; Z80 reset register
+
+;****************************************************************************
+; MINIMUSIC_Z80_GUARD_BEGIN, MINIMUSIC_Z80_GUARD_END
+; Macros to pause and resume the Z80 around DMA transfers and I/O accesses.
+;****************************************************************************
+
+MINIMUSIC_Z80_GUARD_BEGIN macro
+    move.w  #$100, (MiniMusic_Z80BusReq)
+    endm
+
+MINIMUSIC_Z80_GUARD_END macro
+    move.w  #$000, (MiniMusic_Z80BusReq)
+    endm
+
+;****************************************************************************
+; MiniMusic_Init
+; Initializes the sound driver.
+;----------------------------------------------------------------------------
+; input d0.w .... size of data
+; input a0.l .... pointer to data
+;----------------------------------------------------------------------------
+; modifies ...... d0-d1/a0-a1
+;----------------------------------------------------------------------------
+; note: if d0 = 0, then no data is loaded (a0 is ignored)
+;       maximum size of data is 6KB
+;****************************************************************************
+
+MiniMusic_Init:
+    move.w  #$100,(MiniMusic_Z80BusReq) ; Request the Z80 bus so we can
+    move.w  #$100,(MiniMusic_Z80Reset)    ; access Z80 RAM but keep the Z80
+                                          ; reset so it won't execute yet
+    
+    lea     (MiniMusic_Z80Data), a1     ; Copy the provided sound data to
+    bra.s   MiniMusic_Init_LoadDataEnd    ; the portion of Z80 reserved for
+MiniMusic_Init_LoadData:                  ; it, if any
+    move.b  (a0)+, (a1)+
+MiniMusic_Init_LoadDataEnd:
+    dbf     d0, MiniMusic_Init_LoadData
+    
+    lea     (MiniMusic_Blob), a0        ; Copy the Z80 program to the
+    lea     (MiniMusic_Z80Prog), a1       ; beginning of Z80 RAM
+    move.w  #MiniMusic_BlobSize-1, d0
+MiniMusic_Init_LoadProg:
+    move.b  (a0)+, (a1)+
+    dbf     d0, MiniMusic_Init_LoadProg
+    
+    move.w  #$000,(MiniMusic_Z80Reset)  ; Reset the Z80 again, then let go
+    moveq   #$7F, d0                      ; of the Z80 bus so it can execute
+    dbf     d0, *                         ; the program we just loaded
+    move.w  #$000,(MiniMusic_Z80BusReq)
+    move.w  #$100,(MiniMusic_Z80Reset)
+    
+    rts                                 ; End of subroutine
+
+;****************************************************************************
+; MiniMusic_SendCmd
+; Sends a command to the sound driver.
+;----------------------------------------------------------------------------
+; input d0.b .... command to send
+;----------------------------------------------------------------------------
+; modifies ...... d0-d1/a0-a1
+;****************************************************************************
+
+MiniMusic_SendCmd:
+    move.w  #$100,(MiniMusic_Z80BusReq) ; Request the Z80 bus
+MiniMusic_SendCmd_Wait:
+    btst    #0, (MiniMusic_Z80BusReq)   ; Wait until we can access the bus
+    bne.s   MiniMusic_SendCmd_Wait        ; (we need to access Z80 RAM)
+    
+    lea     (MiniMusic_Z80Prog), a0     ; Look for free room in the command
+    tst.b   (a0)+                         ; queue (there's enough room for
+    beq.s   MiniMusic_SendCmd_WriteOk     ; three commands in one go)
+    tst.b   (a0)+
+    beq.s   MiniMusic_SendCmd_WriteOk
+    tst.b   (a0)+
+    beq.s   MiniMusic_SendCmd_WriteOk
+    
+    move.w  #$000,(MiniMusic_Z80BusReq) ; Resume Z80 execution
+    move.w  #$1FF, d1                   ; Waste some time to see if the Z80
+    dbf     d1, *                         ; is done being busy
+    bra.s   MiniMusic_SendCmd           ; Go retry
+    
+MiniMusic_SendCmd_WriteOk:
+    move.b  d0, -(a0)                   ; Store the command
+    move.w  #$000,(MiniMusic_Z80BusReq) ; Resume Z80 execution
+    rts                                 ; End of subroutine

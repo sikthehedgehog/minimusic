@@ -1,0 +1,14 @@
+Command:        nop                     ; Reserved for commands (nop = $00)
+Command2:       nop                       ; and to pad the code below to an
+Command3:       nop                       ; 8 byte boundary (for RST routines)
+    
+    ld      sp, 800h                    ; Set up stack
+    jr      Init                        ; Go to init routine
+    
+    include "src-z80/define.z80"
+    include "src-z80/main.z80"
+    include "src-z80/util.z80"
+    include "src-z80/track.z80"
+    include "src-z80/fm.z80"
+    include "src-z80/psg.z80"
+    include "src-z80/data.z80"

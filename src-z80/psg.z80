@@ -217,9 +217,14 @@ UpdateAdsr_Release:
 ;*******************************************************************************
 
 MutePsg:
-    ld      hl, PsgPort                 ; Pointer to PSG port
-    ld      (hl), $9F                   ; Mute 1st square channel
-    ld      (hl), $BF                   ; Mute 2nd square channel
-    ld      (hl), $DF                   ; Mute 3rd square channel
-    ld      (hl), $FF                   ; Mute noise channel
+    ld      hl, PsgChanData+PSGCHAN_RR  ; Pointer to ADSR data to modify
+    ld      de, SIZEOF_PSGCHAN-1        ; Distance between two channels
+    ld      b, NUM_PSGCHAN              ; Loop through all PSG channels
+MutePsgLoop:
+    ld      (hl), $FF                   ; Set RR to maximum
+    inc     hl                          ; Move pointer to current level
+    ld      (hl), $00                   ; Set level to minimum
+    add     hl, de                      ; Advance pointer to next RR
+    
+    djnz    MutePsgLoop                 ; Process next channel
     ret                                 ; End of subroutine

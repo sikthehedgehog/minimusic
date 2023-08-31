@@ -161,6 +161,10 @@ StopAllTracksLoop:
 ;-------------------------------------------------------------------------------
 
 StopAllSfx:
+    ld      hl, 0                       ; Reset all SFX priorities
+    ld      (SfxPriority+0), hl
+    ld      (SfxPriority+2), hl
+    
     ld      hl, SfxTrackData            ; Pointer to 1st SFX track
     ld      b, NUM_SFXTRACKS            ; Number of SFX tracks
     jr      StopAllTracksLoop           ; Loop through them

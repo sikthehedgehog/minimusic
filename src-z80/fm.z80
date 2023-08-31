@@ -329,29 +329,33 @@ MuteFm:
                                         ; C = channel to key-off
 MuteFmKeyLoop:
     ld      (hl), YMREG_KEY             ; Write register number
-    inc     hl
+    inc     hl                          ; Point to data port
     ld      (hl), c                     ; Tell it to key-off this channel
-    dec     hl
-    push    hl                          ; Waste a lot of cycles (to-do: find
-    pop     hl                            ; another time waster that eats up
-    push    hl                            ; less bytes, we need 80 cycles in
-    pop     hl                            ; total, including the DEC HL, INC C
-    push    hl                            ; and DJNZ)
-    pop     hl
+    dec     hl                          ; Point back to address port
+    
+    ex      (sp), hl                    ; Waste a lot of cycles (we need 80
+    ex      (sp), hl                      ; cycles in total, including the
+    ex      (sp), hl                      ; DEC HL, INC C and DJNZ)
+    ex      (sp), hl
+    
     inc     c                           ; Increase channel number
     djnz    MuteFmKeyLoop               ; Go for next channel
     ret                                 ; End of subroutine
-    
+
+;-------------------------------------------------------------------------------
+
 MuteFmRR:
     ld      bc, (16<<8)|YMREG_RR        ; B = loop counter
                                         ; C = register number
 MuteFmRRLoop:
     ld      (hl), c                     ; Write register number
-    inc     hl
-    ld      (hl), $0F                   ; Write register value
-    dec     hl
+    inc     hl                          ; Point to data port
+    ld      (hl), $0F                   ; Write register value (max. RR)
+    dec     hl                          ; Point back to address port
+    
     push    hl                          ; Waste a few cycles
     pop     hl
+    
     inc     c                           ; Increase register number
     djnz    MuteFmRRLoop                ; Go write next RR register
     ret                                 ; Back to subroutine

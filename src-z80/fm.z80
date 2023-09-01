@@ -319,12 +319,11 @@ UpdateFmPan:
 ;*******************************************************************************
 
 MuteFm:
-    ld      hl, YmAddr1                 ; Set up RR of ch1-ch3
-    call    MuteFmRR
     ld      l, YmAddr2&$FF              ; Set up RR of ch4-ch6
     call    MuteFmRR
+    ld      hl, YmAddr1                 ; Set up RR of ch1-ch3
+    call    MuteFmRR
     
-    ld      l, YmAddr1&$FF              ; Key is always done from bank 1
     ld      bc, 7<<8                    ; B = loop counter
                                         ; C = channel to key-off
 MuteFmKeyLoop:

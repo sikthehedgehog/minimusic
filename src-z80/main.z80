@@ -19,10 +19,6 @@ SetLastBankLoop:                          ; to any cartridge slot or 32X area
                                           ; we'll just point it to work RAM
                                           ; permanently.
     
-    ;call    MutePsg                     ; Mute the PSG (in case we come from
-                                          ; soft reset or another sound driver
-                                          ; had been using it before)
-    
     ld      a, YMREG_MODE               ; Start up timer B
     ld      (YmAddr1), a
     ld      a, YMACK_TIMERB

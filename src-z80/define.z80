@@ -19,6 +19,11 @@ YmData2:            equ $4003   ; YM2612 bank 2 data port
 
 PsgPort:            equ $7F11   ; PSG port
 
+BankPort:           equ $6001   ; Bank switching port (actually $6000 but this
+                                  ; lets us write 1 to the bottom bit by reusing
+                                  ; the L register since the port responds to
+                                  ; the whole $60xx range)
+
 ;*******************************************************************************
 ; State kept for each track
 ;*******************************************************************************
@@ -52,15 +57,15 @@ NUM_TRACKS:             equ NUM_BGMTRACKS+NUM_SFXTRACKS
 ; track state needs to be reflected in the hardware.
 ;*******************************************************************************
 
-FLAG_KEYOFF:            equ 0   ; Issue key-off
-FLAG_KEYON:             equ 1   ; Issue key-on
-FLAG_CANCELKEY:         equ 2   ; Ignore the above two
+FLAG_KEYOFF:            equ 1   ; Issue key-off
+FLAG_KEYON:             equ 2   ; Issue key-on
+FLAG_CANCELKEY:         equ 0   ; Ignore the above two
 FLAG_INSTRUMENT:        equ 4   ; Load new instrument values
 FLAG_PITCH:             equ 5   ; Update channel frequency
 FLAG_VOLUME:            equ 6   ; Update channel attenuation
 FLAG_PAN:               equ 7   ; Update channel panning
 
-FLAGMASK_REFRESH:       equ $F1 ; Write this value to force a channel refresh
+FLAGMASK_REFRESH:       equ $F2 ; Write this value to force a channel refresh
 
 ;*******************************************************************************
 ; State kept for each FM channel
@@ -128,6 +133,16 @@ OP_PAN:                 equ $6E     ; Set panning
 OP_NOISE:               equ $6E     ; Set PSG noise mode
 
 OP_ENDSFX:              equ $6F     ; [internal] Return channel to BGM
+
+;*******************************************************************************
+; 68000 special command numbers
+;*******************************************************************************
+
+FIRST_CMD:              equ $FD     ; Lowest command number
+
+CMD_UNPAUSE:            equ $FD     ; Resume music
+CMD_PAUSE:              equ $FE     ; Pause music
+CMD_STOP:               equ $FF     ; Stop music
 
 ;*******************************************************************************
 ; YM2612 register numbers

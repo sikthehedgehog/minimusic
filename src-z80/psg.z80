@@ -32,16 +32,15 @@ UpdatePsgChan:
     ldir
 NoPsgVoiceLoad:
     
-    bit     FLAG_CANCELKEY, (ix+TRACK_FLAGS)    ; Ignore keying?
-    jr      nz, NoPsgKeyOn
-    
-    bit     FLAG_KEYOFF, (ix+TRACK_FLAGS)       ; Requested key-off?
-    jr      z, NoPsgKeyOff
+    ld      a, (ix+TRACK_FLAGS)                 ; Get flags
+    rrca                                        ; Ignore keying?
+    jr      c, NoPsgKeyOn
+    rrca                                        ; Requested key-off?
+    jr      nc, NoPsgKeyOff
     ld      (iy+PSGCHAN_PHASE), ADSR_RELEASE    ; Set envelope to release
 NoPsgKeyOff:
-    
-    bit     FLAG_KEYON, (ix+TRACK_FLAGS)        ; Requested key-on?
-    jr      z, NoPsgKeyOn
+    rrca                                        ; Requested key-on?
+    jr      nc, NoPsgKeyOn
     ld      (iy+PSGCHAN_PHASE), ADSR_ATTACK     ; Set envelope to attack
 NoPsgKeyOn:
     

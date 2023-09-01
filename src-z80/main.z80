@@ -12,7 +12,7 @@ Init:
     ld      (YmData1), a
     
     ld      b, 9                        ; 32X PSG fix (see 32X tech bulletin
-    ld      hl, $6001                     ; #22), the 68000 bank must not point
+    ld      hl, BankPort                  ; #22), the 68000 bank must not point
 SetLastBankLoop:                          ; to any cartridge slot or 32X area
     ld      (hl), l                       ; when accessing PSG. Since this
     djnz    SetLastBankLoop               ; driver never accesses the cartridge
@@ -96,7 +96,7 @@ UpdatePsgChanLoop:                        ; the noise one
 ;*******************************************************************************
 
 ProcessCommand:
-    cp      $FD                         ; Special command?
+    cp      FIRST_CMD                   ; Special command?
     jr      nc, ProcessCommandEx
     
     dec     a                           ; Play BGM?

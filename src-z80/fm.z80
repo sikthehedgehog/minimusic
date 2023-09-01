@@ -20,11 +20,12 @@ UpdateFmChan:
     ld      e, (iy+FMCHAN_TRACK)        ; Get pointer to the track associated
     call    GetTrackStateAddr             ; with this channel
     
-    bit     FLAG_KEYOFF, (ix+TRACK_FLAGS)   ; Requested key-off?
-    jr      z, NoFmKeyOff                     ; If not, skip this
-    xor     a                               ; Mask = all slots off
-    bit     FLAG_CANCELKEY,(ix+TRACK_FLAGS) ; Is key-off canceled?
-    call    z, DoFmKey                        ; If not, do key-off
+    ld      a, (ix+TRACK_FLAGS)         ; Get flags
+    rrca                                ; Is keying canceled?
+    jr      c, NoFmKeyOff                 ; If so, skip this
+    rrca                                ; Requested key-off?
+    ld      a, $00                        ; Mask = all slots off
+    call    c, DoFmKey                    ; If so, do key-off
 NoFmKeyOff:
     
     ld      l, (iy+FMCHAN_PORT)             ; The following stuff is done on
@@ -40,11 +41,13 @@ NoFmKeyOff:
     bit     FLAG_PAN, (ix+TRACK_FLAGS)      ; Need to update panning?
     call    nz, UpdateFmPan
     
-    bit     FLAG_KEYON, (ix+TRACK_FLAGS)    ; Requested key-on?
-    jr      z, NoFmKeyOn                      ; If not, skip this
-    ld      a, $F0                          ; Mask = all slots on
-    bit     FLAG_CANCELKEY,(ix+TRACK_FLAGS) ; Is key-on canceled?
-    call    z, DoFmKey                        ; If not, do key-on
+    ld      a, (ix+TRACK_FLAGS)         ; Get flags
+    rrca                                ; Is keying canceled?
+    jr      c, NoFmKeyOn                  ; If so, skip this
+    rrca                                ; Skip key-off flag
+    rrca                                ; Requested key-on?
+    ld      a, $F0                        ; Mask = all slots on
+    call    c, DoFmKey                    ; If so, do key-on
 NoFmKeyOn:
     
     ld      (ix+TRACK_FLAGS), 0         ; Acknowledge all the flags

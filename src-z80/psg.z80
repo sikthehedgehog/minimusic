@@ -70,12 +70,12 @@ PsgNotTooQuiet:
     ld      a, $FF                        ; Note that INC A will *not* change
 PsgNotTooQuiet2:                          ; the carry flag, so this will work
     
-    rrca                                ; PSG works in -2dB attenuation steps
+    scf                                 ; Set bit to write attenuation register
+    rra                                 ; PSG works in -2dB attenuation steps
     rrca                                  ; so now convert it to that
     rrca
     rrca
-    and     $0F
-    or      $90                         ; Set command bits for attenuation
+    and     $1F                         ; Filter out irrelevant bits
     or      (iy+PSGCHAN_BITS)           ; Set command bits for PSG channel
     ld      (PsgPort), a                ; Send command to PSG
     
@@ -113,10 +113,12 @@ PsgFreqShift:                             ; *down*) to get the actual frequency
                                           ; for the excess iteration when the
                                           ; loop starts.
     
+    ld      de, PsgPort                 ; Pointer to PSG port
+    
     ld      a, l                        ; Isolate bottom 4 bits
     and     $0F
     or      (iy+PSGCHAN_BITS)           ; Mix with command bits for channel
-    ld      (PsgPort), a                ; Send 1st byte to PSG
+    ld      (de), a                     ; Send 1st byte to PSG
     
     ld      a, l                        ; Isolate next 4 bits
     and     $F0
@@ -125,7 +127,7 @@ PsgFreqShift:                             ; *down*) to get the actual frequency
     rrca
     rrca
     rrca
-    ld      (PsgPort), a                ; Send 2nd byte to PSG
+    ld      (de), a                     ; Send 2nd byte to PSG
     
     ret                                 ; End of subroutine
 

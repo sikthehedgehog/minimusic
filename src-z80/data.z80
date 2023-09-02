@@ -115,14 +115,22 @@ InstrumentTLMask:
 ;*******************************************************************************
 
 DefaultEndSfx:
-    db      OP_INSTRUMENT,0             ; Waste one tick to reload instrument 0
-    db      $80,OP_KEYOFF                 ; to ensure the channel is clean even
+    db      OP_ENDSFX                   ; Return channel to SFX
+    
+    db      OP_INSTRUMENT,0             ; Set instrument 0 to mute the channel
+                                          ; directly with the key-off below.
+                                          ; Note that it will be still updated
+                                          ; despite returning the channel back
+                                          ; because remapping happens before
+                                          ; this but hardware updates happen
+                                          ; after this.
+    
+;    db      OP_INSTRUMENT,0             ; Waste one tick to reload instrument 0
+;    db      $80,OP_KEYOFF                 ; to ensure the channel is clean even
                                           ; if it's released while paused.
                                           ; TO-DO: come up with a better way to
                                           ; do this that doesn't waste a frame
                                           ; and doesn't take up too much memory.
-    
-    db      OP_ENDSFX                   ; Return channel to SFX
     ; fallthrough...
 
 DefaultEndBgm:

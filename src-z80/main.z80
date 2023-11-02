@@ -147,7 +147,7 @@ StopAllSound:
     ld      b, NUM_TRACKS               ; Loop through all tracks
 StopAllTracksLoop:
     push    bc                          ; Save loop counter
-    ld      de, DefaultEndBgm           ; Track that stops all sound
+    ld      de, DefaultEndSfx           ; Track that stops all sound
     call    InitTrack                   ; Initialize track with that
     pop     bc                          ; Restore loop counter
     djnz    StopAllTracksLoop           ; Go for next track
@@ -162,15 +162,6 @@ StopAllTracksLoop:
 ;*******************************************************************************
 
 Pause:
-    sbc     hl, hl                      ; Reset all SFX priorities
-    ld      (SfxPriority+0), hl           ; SBC HL,HL relies on carry being
-    ld      (SfxPriority+2), hl           ; clear, which is true because of
-                                          ; the math used by the jump table
-                                          ; that brought us here
-    
-    call    MuteFm                      ; Mute all the channels
-    call    MutePsg
-    
     ld      hl, SfxTrackData            ; Pointer to 1st SFX track
     ld      b, NUM_SFXTRACKS            ; Number of SFX tracks
     call    StopAllTracksLoop           ; Stop all the SFX tracks
@@ -179,6 +170,9 @@ Pause:
     ld      (UpdateTrackCount), a         ; the SFX tracks (we need to keep this
                                           ; in case a SFX is played *after* we
                                           ; pause music)
+    
+    call    MuteFm                      ; Mute all the channels
+    call    MutePsg
     
     jr      EndOfCommand                ; End of command, do clean-up
 

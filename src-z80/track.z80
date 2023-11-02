@@ -379,6 +379,11 @@ ReturnChanToBgm:
                                           ; The pointer is 16-bit, but overflow
                                           ; will ensure the offset is correct.
     
+    cp      NUM_SFXTRACKS*SIZEOF_TRACK  ; Make the command do nothing if it
+    ret     nc                            ; ends up being executed by a BGM
+                                          ; track (this helps reduce the amount
+                                          ; of code needed by StopAllSound)
+    
     ld      hl, SfxPriority-1           ; Count tracks to figure out to which
 SfxChanFromTrack:                         ; SFX channel this track belongs so
     inc     hl                            ; we get a pointer to its priority

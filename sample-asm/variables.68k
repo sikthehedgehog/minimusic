@@ -1,0 +1,3 @@
+    ByteVar JoyHold                     ; Joypad buttons being held down
+    ByteVar JoyPress                    ; Joypad buttons pressed just now
+    ByteVar VBlankFlag                  ; Set by interrupt when vblank begins

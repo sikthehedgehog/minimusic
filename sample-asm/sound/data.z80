@@ -1,0 +1,58 @@
+    include "sound/define.z80"          ; Common definitions
+
+;*******************************************************************************
+; MiniMusic header
+;*******************************************************************************
+
+    org     $800                        ; Where sound data begins
+    db      NUM_BGM, NUM_SFX            ; Number of BGM and SFX
+    dw      BgmList, SfxList            ; Address of BGM and SFX lists
+    dw      InstrumentList              ; Address of instrument list
+
+;*******************************************************************************
+; List of addresses for every track
+;*******************************************************************************
+
+BgmList:
+NUM_BGM:    equ ($-BgmList)/2           ; Number of BGM
+
+SfxList:
+    dw      WhooshSfx                   ; Quick "whoosh!"
+NUM_SFX:    equ ($-SfxList)/2           ; Number of SFX
+
+;*******************************************************************************
+; Every instrument
+;*******************************************************************************
+
+InstrumentList:
+    dw      FlatPsg                     ; 1 [PSG] flat envelope
+    dw      KickDrumFm                  ; 2 [FM] kick drum
+    dw      SnareDrumFm                 ; 3 [FM] snare drum
+
+FlatPsg:            db $FF,$00,$FF,$00,$00,$FF
+KickDrumFm:         incbin "sound/kick.eif"
+SnareDrumFm:        incbin "sound/snare.eif"
+
+;*******************************************************************************
+; Quick whoosh sound effect.
+;*******************************************************************************
+
+WhooshSfx:
+    db  SFXPRI_LO|SFXCH_PSG3|SFXCH_PSG4
+    dw  WhooshSfx_Psg3
+    dw  WhooshSfx_Psg4
+
+WhooshSfx_Psg3:
+    db  L128, Gs6
+    db  L64, As6
+    db  L128, Gs6
+    db  L64, Fs6
+    db  End
+
+WhooshSfx_Psg4:
+    db  Ins,1
+    db  L128, Vol,16, NWCh3
+    db  L64, Vol,8, _,R
+    db  L128, Vol,16, _,R
+    db  L64, Vol,24, _,R
+    db  End

@@ -1,0 +1,39 @@
+;*******************************************************************************
+; Hardware addresses
+;*******************************************************************************
+
+HwVersion:          equ $A10001         ; Console region and version
+TmssPort:           equ $A14000         ; Write here to pass TMSS
+
+VdpCtrl:            equ $C00004         ; VDP control port
+VdpData:            equ $C00000         ; VDP data port
+
+IoCtrl1P:           equ $A10009         ; 1P I/O control port
+IoCtrl2P:           equ $A1000B         ; 2P I/O control port
+IoData1P:           equ $A10003         ; 1P I/O data port
+IoData2P:           equ $A10005         ; 2P I/O data port
+
+;*******************************************************************************
+; Macros to define variables in RAM.
+; This part is highly NOT portable across assemblers, so make sure to fix it
+; for whatever assembler you're using.
+;*******************************************************************************
+
+_RamAddr    set $FF0000                 ; Start of RAM
+
+ByteVar     macro name
+name        equ _RamAddr                ; Define label
+_RamAddr    set _RamAddr+1              ; Advance address
+            endm
+
+WordVar     macro name
+_RamAddr    set (_RamAddr+1)&(-2)       ; Align to even
+name        equ _RamAddr                ; Define label
+_RamAddr    set _RamAddr+2              ; Advance address
+            endm
+
+LongVar     macro name
+_RamAddr    set (_RamAddr+1)&(-2)       ; Align to even
+name        equ _RamAddr                ; Define label
+_RamAddr    set _RamAddr+4              ; Advance address
+            endm

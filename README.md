@@ -11,5 +11,4 @@ This driver is under the zlib license (see `LICENSE.txt`). You are *not* require
 * If using C: check `doc/api-c.md`
 * If using asm: check `doc/api-asm.md`
 
-The format for the sound data is documented in `doc/format.md`.
-
+The format for the sound data is documented in `doc/format.md`. A sample program (asm API only) is available in the `sample-asm` directory.

@@ -1,0 +1,206 @@
+;****************************;
+; Key values for every pitch ;
+;****************************;
+
+C1:     equ 0
+Cs1:    equ 1
+D1:     equ 2
+Ds1:    equ 3
+E1:     equ 4
+F1:     equ 5
+Fs1:    equ 6
+G1:     equ 7
+Gs1:    equ 8
+A1:     equ 9
+As1:    equ 10
+B1:     equ 11
+
+C2:     equ 12
+Cs2:    equ 13
+D2:     equ 14
+Ds2:    equ 15
+E2:     equ 16
+F2:     equ 17
+Fs2:    equ 18
+G2:     equ 19
+Gs2:    equ 20
+A2:     equ 21
+As2:    equ 22
+B2:     equ 23
+
+C3:     equ 24
+Cs3:    equ 25
+D3:     equ 26
+Ds3:    equ 27
+E3:     equ 28
+F3:     equ 29
+Fs3:    equ 30
+G3:     equ 31
+Gs3:    equ 32
+A3:     equ 33
+As3:    equ 34
+B3:     equ 35
+
+C4:     equ 36
+Cs4:    equ 37
+D4:     equ 38
+Ds4:    equ 39
+E4:     equ 40
+F4:     equ 41
+Fs4:    equ 42
+G4:     equ 43
+Gs4:    equ 44
+A4:     equ 45
+As4:    equ 46
+B4:     equ 47
+
+C5:     equ 48
+Cs5:    equ 49
+D5:     equ 50
+Ds5:    equ 51
+E5:     equ 52
+F5:     equ 53
+Fs5:    equ 54
+G5:     equ 55
+Gs5:    equ 56
+A5:     equ 57
+As5:    equ 58
+B5:     equ 59
+
+C6:     equ 60
+Cs6:    equ 61
+D6:     equ 62
+Ds6:    equ 63
+E6:     equ 64
+F6:     equ 65
+Fs6:    equ 66
+G6:     equ 67
+Gs6:    equ 68
+A6:     equ 69
+As6:    equ 70
+B6:     equ 71
+
+C7:     equ 72
+Cs7:    equ 73
+D7:     equ 74
+Ds7:    equ 75
+E7:     equ 76
+F7:     equ 77
+Fs7:    equ 78
+G7:     equ 79
+Gs7:    equ 80
+A7:     equ 81
+As7:    equ 82
+B7:     equ 83
+
+C8:     equ 84
+Cs8:    equ 85
+D8:     equ 86
+Ds8:    equ 87
+E8:     equ 88
+F8:     equ 89
+Fs8:    equ 90
+G8:     equ 91
+Gs8:    equ 92
+A8:     equ 93
+As8:    equ 94
+B8:     equ 95
+
+NPHi:   equ 0       ; Periodic noise, high pitch
+NPMi:   equ 1       ; Periodic noise, medium pitch
+NPLo:   equ 2       ; Periodic noise, low pitch
+NPCh3:  equ 3       ; Periodic noise, PSG3 freq.
+NWHi:   equ 4       ; White noise, high pitch
+NWMi:   equ 5       ; White noise, medium pitch
+NWLo:   equ 6       ; White noise, low pitch
+NWCh3:  equ 7       ; White noise, PSG3 freq.
+
+R:      equ 96      ; Rest
+
+;**********************************;
+; Values for common note lengths   ;
+;----------------------------------;
+; L#   = 1/#th note                ;
+; L#q  = 1/#th note + 25%          ;
+; L#d  = 1/#th note + 50% (dotted) ;
+; L#dq = 1/#th note + 75%          ;
+;**********************************;
+
+L128:   equ $7F+1
+L64:    equ $7F+2
+L64d:   equ $7F+2+1
+L32:    equ $7F+4
+L32q:   equ $7F+4+1
+L32d:   equ $7F+4+2
+L32dq:  equ $7F+4+2+1
+L16:    equ $7F+8
+L16q:   equ $7F+8+2
+L16d:   equ $7F+8+4
+L16dq:  equ $7F+8+4+2
+L8:     equ $7F+16
+L8q:    equ $7F+16+4
+L8d:    equ $7F+16+8
+L8dq:   equ $7F+16+8+4
+L4:     equ $7F+32
+L4q:    equ $7F+32+8
+L4d:    equ $7F+32+16
+L4dq:   equ $7F+32+16+8
+L2:     equ $7F+64
+L2q:    equ $7F+64+16
+L2d:    equ $7F+64+32
+L2dq:   equ $7F+64+32+16
+L1:     equ $7F+128
+
+LL32:   equ $7F+3
+LL16:   equ $7F+6
+LL16d:  equ $7F+6+3
+LL8:    equ $7F+12
+LL8q:   equ $7F+12+3
+LL8d:   equ $7F+12+6
+LL8dq:  equ $7F+12+6+3
+LL4:    equ $7F+24
+LL4q:   equ $7F+24+6
+LL4d:   equ $7F+24+12
+LL4dq:  equ $7F+24+12+6
+LL2:    equ $7F+48
+LL2q:   equ $7F+48+12
+LL2d:   equ $7F+48+24
+LL2dq:  equ $7F+48+24+12
+LL1:    equ $7F+96
+
+;****************;
+; Other commands ;
+;****************;
+
+_:      equ $61     ; Cancel key-on/off
+Ins:    equ $69     ; Set instrument
+Tra:    equ $6A     ; Transpose (absolute)
+TraR:   equ $6B     ; Transpose (relative)
+Vol:    equ $6C     ; Volume (absolute)
+VolR:   equ $6D     ; Volume (relative)
+Pan:    equ $6E     ; Panning
+
+Loop:   equ $62     ; Main loop start
+End:    equ $63     ; Main loop end
+Rep:    equ $64     ; Sub-loop start
+REnd:   equ $65     ; Sub-loop end
+CallB:  equ $66     ; Call subroutine (byte offset)
+CallW:  equ $67     ; Call subroutine (word offset)
+Return: equ $68     ; Return from subroutine
+
+;************************************************;
+; SFX header flags                               ;
+; You can OR one of SFXPRI_* with any of SFXCH_* ;
+; Remember priority can be any multiple of $10   ;
+;************************************************;
+
+SFXPRI_MAX:     equ $F0     ; Maximum priority
+SFXPRI_HI:      equ $C0     ; High priority
+SFXPRI_MID:     equ $80     ; Normal priority
+SFXPRI_LO:      equ $40     ; Low priority
+SFXPRI_MIN:     equ $00     ; Minimum priority
+
+SFXCH_FM5:      equ $01     ; Use FM channel 5
+SFXCH_FM6:      equ $02     ; Use FM channel 6
+SFXCH_PSG3:     equ $04     ; Use PSG channel 3
+SFXCH_PSG4:     equ $08     ; Use PSG channel 4

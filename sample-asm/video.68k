@@ -1,0 +1,44 @@
+;*******************************************************************************
+; InitVideo
+; Initializes the video hardware.
+;-------------------------------------------------------------------------------
+; modifies ...... all
+;*******************************************************************************
+
+InitVideo:
+    lea     (VdpCtrl), a0               ; Pointer to VDP control port
+    
+    tst.w   (VdpCtrl)                   ; The console may be reset in the middle
+                                          ; of writing a two-word command and
+                                          ; leave the VDP waiting for the second
+                                          ; word. Read the VDP status register
+                                          ; to cancel any pending command.
+    
+    move.w  #$8004, (a0)                ; Do some basic VDP initialization for
+    move.w  #$8124, (a0)                  ; now (enough to ensure the vblank
+    move.w  #$8AFF, (a0)                  ; interrupt works and video mode is
+    move.w  #$8B00, (a0)                  ; stable), we'll fix this up later
+    move.w  #$8C81, (a0)                  ; once we need to display graphics.
+    
+    rts                                 ; End of subroutine
+
+;*******************************************************************************
+; VBlank
+; Handler for the vblank interrupt.
+;*******************************************************************************
+
+VBlank:
+    st.b    (VBlankFlag)                ; Set vblank flag
+    rte                                 ; End of interrupt
+
+;*******************************************************************************
+; VSync
+; Waits until next vblank begins. Interrupts must be enabled.
+;*******************************************************************************
+
+VSync:
+    clr.b   (VBlankFlag)                ; Clear vblank flag
+VSync_Wait:
+    tst.b   (VBlankFlag)                ; Did vblank come in yet?
+    beq.s   VSync_Wait                  ; Keep waiting until it does
+    rts                                 ; End of subroutine

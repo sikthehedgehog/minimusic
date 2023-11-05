@@ -1,0 +1,43 @@
+;*******************************************************************************
+; 68000 vectors
+;*******************************************************************************
+
+    dc.l    $1000000, EntryPoint, ErrorInt, ErrorInt
+    dc.l    ErrorInt, ErrorInt, ErrorInt, ErrorInt
+    dc.l    ErrorInt, ErrorInt, ErrorInt, ErrorInt
+    dc.l    ErrorInt, ErrorInt, ErrorInt, ErrorInt
+    
+    dc.l    ErrorInt, ErrorInt, ErrorInt, ErrorInt
+    dc.l    ErrorInt, ErrorInt, ErrorInt, ErrorInt
+    dc.l    ErrorInt, ErrorInt, ErrorInt, ErrorInt
+    dc.l    ErrorInt, ErrorInt, VBlank, ErrorInt
+    
+    dc.l    ErrorInt, ErrorInt, ErrorInt, ErrorInt
+    dc.l    ErrorInt, ErrorInt, ErrorInt, ErrorInt
+    dc.l    ErrorInt, ErrorInt, ErrorInt, ErrorInt
+    dc.l    ErrorInt, ErrorInt, ErrorInt, ErrorInt
+    
+    dc.l    ErrorInt, ErrorInt, ErrorInt, ErrorInt
+    dc.l    ErrorInt, ErrorInt, ErrorInt, ErrorInt
+    dc.l    ErrorInt, ErrorInt, ErrorInt, ErrorInt
+    dc.l    ErrorInt, ErrorInt, ErrorInt, ErrorInt
+
+;*******************************************************************************
+; Mega Drive header
+;*******************************************************************************
+
+    dc.b    "SEGA MEGA DRIVE "          ; System name
+    dc.b    "(C) SIK 2023.NOV"          ; Copyright and date
+    dc.b    "MINIMUSIC SAMPLE"          ; Japanese title
+    dcb.b   $150-*, $20
+    dc.b    "MINIMUSIC SAMPLE"          ; Overseas title
+    dcb.b   $180-*, $20
+    dc.b    "AI SIK-MMSM-00"            ; Unique identifier
+    dc.w    $0000                       ; Checksum (placeholder)
+    dc.b    "J"                         ; Device support
+    dcb.b   $1A0-*, $20
+    dc.l    $000000, $3FFFFF            ; ROM address range
+    dc.l    $FF0000, $FFFFFF            ; RAM address range
+    dcb.b   $1F0-*, $20
+    dc.b    "JUE"                       ; Region support
+    dcb.b   $200-*, $20

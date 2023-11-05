@@ -1,0 +1,66 @@
+JOY_UP:             equ 0               ; D-pad up
+JOY_DOWN:           equ 1               ; D-pad down
+JOY_LEFT:           equ 2               ; D-pad left
+JOY_RIGHT:          equ 3               ; D-pad right
+JOY_A:              equ 6               ; A button
+JOY_B:              equ 4               ; B button
+JOY_C:              equ 5               ; C button
+JOY_START:          equ 7               ; Start button
+
+;*******************************************************************************
+; InitJoypad
+; Initializes the joypad.
+;-------------------------------------------------------------------------------
+; modifies ...... all
+;*******************************************************************************
+
+InitJoypad:
+    move.b  #$40, (IoCtrl1P)            ; Set up I/O port
+    move.b  #$40, (IoData1P)
+    
+    clr.b   (JoyHold)                   ; Reset joypad variables
+    clr.b   (JoyPress)
+    
+    rts                                 ; End of subroutine
+
+;*******************************************************************************
+; ReadJoypad
+; Reads the joypad buttons and updates the joypad variables.
+;-------------------------------------------------------------------------------
+; modifies ...... all
+;-------------------------------------------------------------------------------
+; note: do NOT call this more than once per frame, or you'll break compatibility
+; with 6-button controllers!
+;*******************************************************************************
+
+ReadJoypad:
+    move.b  #$40, (IoData1P)            ; Read D-pad, B and C
+    nop
+    nop
+    nop
+    nop
+    move.b  (IoData1P), d0
+    
+    move.b  #$00, (IoData1P)            ; Read A and Start
+    nop
+    nop
+    nop
+    nop
+    move.b  (IoData1P), d1
+    
+    and.b   #$3F, d0                    ; Put all bits together
+    and.b   #$30, d1
+    lsl.b   #2, d1
+    or.b    d1, d0
+    
+    not.b   d0                          ; Buttons are low logic, i.e. 0 is
+                                          ; pressed and 1 is released. This is
+                                          ; confusing so flip the bits instead.
+    
+    move.b  (JoyHold), d1               ; Compare against the buttons held down
+    eor.b   d0, d1                        ; last frame to find out which buttons
+    and.b   d0, d1                        ; have just been pressed this frame.
+    move.b  d0, (JoyHold)
+    move.b  d1, (JoyPress)
+    
+    rts                                 ; End of subroutine

@@ -1,0 +1,17 @@
+    include "define.68k"                ; Macros, etc.
+    include "header.68k"                ; ROM header
+    
+    include "main.68k"                  ; Main program
+    include "video.68k"                 ; Video routines
+    include "joypad.68k"                ; Joypad routines
+    include "variables.68k"             ; Variable addresses
+    
+    include "minimusic/minimus.68k"     ; MiniMusic API
+    include "minimusic/minimusb.68k"    ; MiniMusic Z80 blob
+
+SoundData:      incbin "sound/data.blob"    ; Sound data
+SoundDataLen:   equ *-SoundData             ; Length of sound data
+
+    dcb.b   (*+1)&(1), 0                ; Pad to even (otherwise some emulators
+                                          ; may trim out the last byte if it
+                                          ; turns out to not be even)

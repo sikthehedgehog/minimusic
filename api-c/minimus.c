@@ -4,14 +4,14 @@
 #include "minimusb.inc"
 
 #define MEMORY_BARRIER() MINIMUSIC_MEMORY_BARRIER()
-#define WASTE_TIME() for (uint16_t i = 0x100; i > 0; i--) { MEMORY_BARRIER(); }
+#define WASTE_TIME() for (uint16_t i = 0x100; i >= 0; i--) { MEMORY_BARRIER(); }
 
 void minimusic_init(const void *data, uint16_t size)
 {
    const uint8_t *src;
-   const volatile uint8_t *dest;
-   const volatile uint8_t *busreq = (uint8_t*)(0xA11100);
-   const volatile uint8_t *reset = (uint8_t*)(0xA11200);
+   volatile uint8_t *dest;
+   volatile uint16_t *busreq = (uint16_t*)(0xA11100);
+   volatile uint16_t *reset = (uint16_t*)(0xA11200);
    
    // Reset the Z80 and request the bus
    // Don't wait for Z80 since it can't respond to our request!
@@ -25,7 +25,7 @@ void minimusic_init(const void *data, uint16_t size)
    // Copy sound data into Z80 RAM
    src = (const uint8_t*)(data);
    dest = (volatile uint8_t*)(0xA00800);
-   while (size > 0) {
+   while (size-- > 0) {
       MEMORY_BARRIER();
       *dest++ = *src++;
       MEMORY_BARRIER();
@@ -35,7 +35,7 @@ void minimusic_init(const void *data, uint16_t size)
    src = minimusic_blob;
    dest = (volatile uint8_t*)(0xA00000);
    size = sizeof(minimusic_blob);
-   while (size > 0) {
+   while (size-- > 0) {
       MEMORY_BARRIER();
       *dest++ = *src++;
       MEMORY_BARRIER();
@@ -57,9 +57,9 @@ void minimusic_init(const void *data, uint16_t size)
 
 void minimusic_send_cmd(uint8_t cmd)
 {
-   const volatile uint8_t *busreq = (uint8_t*)(0xA11100);
-   const volatile uint8_t *z80ram = (uint8_t*)(0xA00000);
-   const volatile uint8_t *ptr;
+   volatile uint16_t *busreq = (uint16_t*)(0xA11100);
+   volatile uint8_t *z80ram = (uint8_t*)(0xA00000);
+   volatile uint8_t *ptr;
    uint8_t temp;
    
 retry:

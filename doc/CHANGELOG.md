@@ -1,5 +1,9 @@
 # MiniMusic changelog
 
+## 2023-12-07: Version 1.03
+
+- Fix C API which wasn't even *building* at all (goes to show how many people are using that API).
+
 ## 2023-11-05
 
 - Added a very minimal sample program. Will need to update in the future with more sounds and a proper interface.

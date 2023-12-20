@@ -97,3 +97,31 @@ ok:
    *busreq = 0x000;
    MEMORY_BARRIER();
 }
+
+uint8_t minimusic_get_status(void)
+{
+   volatile uint16_t *busreq = (uint16_t*)(0xA11100);
+   volatile uint8_t *status = (uint8_t*)(0xA00003);
+   uint8_t temp;
+   
+   // Request the Z80 bus (we need to access Z80 RAM)
+   MEMORY_BARRIER();
+   *busreq = 0x100;
+   MEMORY_BARRIER();
+   while (*busreq & 0x100) {
+      MEMORY_BARRIER();
+   }
+   
+   // Read the sound driver status from Z80 RAM
+   MEMORY_BARRIER();
+   temp = *status;
+   MEMORY_BARRIER();
+   
+   // Resume Z80 execution
+   MEMORY_BARRIER();
+   *busreq = 0x000;
+   MEMORY_BARRIER();
+   
+   // Return the value read earlier
+   return temp;
+}

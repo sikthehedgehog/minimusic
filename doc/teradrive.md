@@ -25,3 +25,9 @@ To send a command:
 3. If Z80 address `$0001` = 0 then write command there, resume Z80 and quit
 4. If Z80 address `$0002` = 0 then write command there, resume Z80 and quit
 5. Let the Z80 run for some time and retry from step 1 (or give up and fail if you don't want to risk the CPU being stuck for a long time)
+
+Additionally, you can implement `MiniMusic_GetStatus` this way (the value you read from Z80 RAM will be the value the function returns):
+
+1. Pause the Z80
+2. Read Z80 address `$0003`
+3. Resume the Z80

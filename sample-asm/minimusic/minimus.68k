@@ -8,6 +8,12 @@ MiniMusic_Z80BusReq:    equ $A11100     ; Z80 bus request register
 MiniMusic_Z80Reset:     equ $A11200     ; Z80 reset register
 
 ;****************************************************************************
+; Meaning of the status flags bits (for use with BTST instruction)
+;****************************************************************************
+
+MINIMUSIC_STATUS_BGM:       equ 0       ; BGM is playing
+
+;****************************************************************************
 ; MINIMUSIC_Z80_GUARD_BEGIN, MINIMUSIC_Z80_GUARD_END
 ; Macros to pause and resume the Z80 around DMA transfers and I/O accesses.
 ;****************************************************************************
@@ -90,5 +96,25 @@ MiniMusic_SendCmd_Wait:
     
 MiniMusic_SendCmd_WriteOk:
     move.b  d0, -(a0)                   ; Store the command
+    move.w  #$000,(MiniMusic_Z80BusReq) ; Resume Z80 execution
+    rts                                 ; End of subroutine
+
+;****************************************************************************
+; MiniMusic_GetStatus
+; Retrieves the current playback state of the sound driver.
+;----------------------------------------------------------------------------
+; output d0.b ... bit 0 = BGM playing (if set)
+;----------------------------------------------------------------------------
+; modifies ...... d0
+;****************************************************************************
+
+MiniMusic_GetStatus:
+    move.w  #$100,(MiniMusic_Z80BusReq) ; Request the Z80 bus
+MiniMusic_GetStatus_Wait:
+    btst    #0, (MiniMusic_Z80BusReq)   ; Wait until we can access the bus
+    bne.s   MiniMusic_GetStatus_Wait      ; (we need to access Z80 RAM)
+    
+    move.b  (MiniMusic_Z80Prog+3), d0   ; Read the status flags
+    
     move.w  #$000,(MiniMusic_Z80BusReq) ; Resume Z80 execution
     rts                                 ; End of subroutine

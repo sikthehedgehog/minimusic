@@ -1,5 +1,11 @@
 # MiniMusic changelog
 
+## 2023-12-20: Version 1.10
+
+- (GitHub issue #12) Added a new function `MiniMusic_GetStatus` to query what the sound driver is doing. Currently it only reports if BGM is playing.
+- It seems the C API was still broken under C++ (oops).
+- Slowed down playback slightly to make it closer to 59.92Hz (NTSC refresh rate) than 60Hz, since it's more likely that you'll want the former instead.
+
 ## 2023-12-07: Version 1.03
 
 - Fix C API which wasn't even *building* at all (goes to show how many people are using that API).

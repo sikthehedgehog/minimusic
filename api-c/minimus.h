@@ -20,7 +20,10 @@ static inline MINIMUSIC_Z80_GUARD_END() {
    MINIMUSIC_MEMORY_BARRIER();
 }
 
+#define MINIMUSIC_STATUS_BGM        0x01
+
 void minimusic_init(const void *, uint16_t);
 void minimusic_sendcmd(uint8_t);
+uint8_t minimusic_get_status(void);
 
 #endif

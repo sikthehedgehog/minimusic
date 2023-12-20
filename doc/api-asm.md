@@ -56,3 +56,21 @@ To prevent this, request the Z80 bus before starting DMA or accessing the I/O po
 ```
 
 Note: only the command that triggers DMA needs to be guarded like this (you don't need to guard around other DMA registers).
+
+## Check if music is still playing
+
+You can check if music is still playing by calling the `MiniMusic_GetStatus` subroutine. It returns status flags in `d0`, use `btst` with `MINIMUSIC_STATUS_BGM` to check if it's playing:
+
+```
+    jsr     MiniMusic_GetStatus
+    btst    #MINIMUSIC_STATUS_BGM, d0
+    bne     MusicIsPlaying
+```
+
+(replace `bne` with `beq` to jump if it is *not* playing instead)
+
+Note that it will report music as *still* playing if it's paused. It only returns false when:
+
+* Music has stopped on its own (all tracks reached the end without looping).
+* Music has been interrupted by sending a stop (255) command.
+* No music has ever played to begin with.  

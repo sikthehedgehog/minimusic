@@ -60,3 +60,21 @@ MINIMUSIC_Z80_GUARD_END();
 ```
 
 Note: only the command that triggers DMA needs to be guarded like this (you don't need to guard around other DMA registers).
+
+## Check if music is playing
+
+You can check if music is still playing by calling the `minimusic_get_status` function. Mask (AND) it against the value `MINIMUSIC_STATUS_BGM`, and if it isn't 0 then music is currently playing:
+
+```
+if (minimusic_get_status() & MINIMUSIC_STATUS_BGM) {
+    // Music is playing...
+} else {
+    // Music not playing...
+}
+```
+
+Note that it will report music as *still* playing if it's paused. It only returns false when:
+
+* Music has stopped on its own (all tracks reached the end without looping).
+* Music has been interrupted by sending a stop (255) command.
+* No music has ever played to begin with.  

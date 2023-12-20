@@ -6,10 +6,12 @@
 ;*******************************************************************************
 
 Init:
+    ld      sp, 800h                    ; Set up stack
+    
     ld      a, YMREG_TIMERB             ; Set up timer B frequency
-    ld      (YmAddr1), a                  ; It defaults to around 60Hz and is
-    ld      a, $C9                        ; the speed at which the tracks tick
-    ld      (YmData1), a
+    ld      (YmAddr1), a                  ; It defaults to around the NTSC
+    ld      a, $C8                        ; refresh rate and is the speed at
+    ld      (YmData1), a                  ; which the tracks tick
     
     ld      b, 9                        ; 32X PSG fix (see 32X tech bulletin
     ld      hl, BankPort                  ; #22), the 68000 bank must not point
@@ -83,6 +85,22 @@ UpdatePsgChanLoop:                        ; the noise one
     call    UpdatePsgChan               ; Update PSG noise channel (which
     call    UpdatePsgNoise                ; doesn't use frequency but treats
                                           ; the pitch as a noise value as-is)
+    
+    ld      bc, (NUM_BGMTRACKS<<8)|$01      ; Check if BGM is playing by
+    ld      hl, BgmTrackData+TRACK_ADDR_HI    ; comparing the address of every
+    ld      de, SIZEOF_TRACK                  ; track with the driver's address
+BgmCheckLoop:                                 ; range (if it's inside the driver
+    ld      a, (hl)                           ; then it's within the stop code)
+    cp      $800>>8                           ;
+    jr      nc, BgmIsPlaying                  ; TO-DO: find a way to do this
+    add     hl, de                            ; that takes up less space.
+    djnz    BgmCheckLoop
+    dec     c
+    
+BgmIsPlaying:
+    ld      a, c                        ; Store result in the status flags
+    ld      (Status), a                   ; $00 = BGM not playing
+                                          ; $01 = BGM playing
     
     jr      IdleLoop                    ; Back to idling
 

@@ -1,10 +1,13 @@
-Command:        nop                     ; Reserved for commands (nop = $00)
-Command2:       nop                       ; and to pad the code below to an
-Command3:       nop                       ; 8 byte boundary (for RST routines)
+    ; The following bytes are reserved for communication with the 68000, when
+    ; the Z80 boots it'll skip over them. NOP's opcode is $00.
     
-    ld      sp, 800h                    ; Set up stack
-    jr      Init                        ; Go to init routine
-    
+Command:        nop                     ; Command queue used to request playing
+Command2:       nop                       ; music or sound effects.
+Command3:       nop
+
+Status:         nop                     ; MiniMusic status to report back what
+                                          ; the driver is currently doing.
+
     include "src-z80/define.z80"
     include "src-z80/main.z80"
     include "src-z80/util.z80"

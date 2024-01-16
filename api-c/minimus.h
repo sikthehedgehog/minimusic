@@ -6,14 +6,14 @@
 
 #define MINIMUSIC_MEMORY_BARRIER() asm volatile ("" : : : "memory")
 
-static inline MINIMUSIC_Z80_GUARD_BEGIN() {
+static inline void MINIMUSIC_Z80_GUARD_BEGIN() {
    volatile uint16_t *port = (uint16_t*)(0xA11100);
    MINIMUSIC_MEMORY_BARRIER();
    *port = 0x100;
    MINIMUSIC_MEMORY_BARRIER();
 }
 
-static inline MINIMUSIC_Z80_GUARD_END() {
+static inline void MINIMUSIC_Z80_GUARD_END() {
    volatile uint16_t *port = (uint16_t*)(0xA11100);
    MINIMUSIC_MEMORY_BARRIER();
    *port = 0x000;

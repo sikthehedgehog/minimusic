@@ -2,6 +2,7 @@
 
 ## 2024-01-16
 
+- More fixes to the C API (I thought it was already fixed in the last patch? huh?). We really need more people trying it so we can be sure that it works.
 - Added information about dealing with the one macro in the Z80 source code, since macro syntax is heavily assembler dependent and you may need to rewrite it if you use a different assembler.
 
 ## 2023-12-20: Version 1.10

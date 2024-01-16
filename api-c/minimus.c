@@ -4,7 +4,7 @@
 #include "minimusb.inc"
 
 #define MEMORY_BARRIER() MINIMUSIC_MEMORY_BARRIER()
-#define WASTE_TIME() for (uint16_t i = 0x100; i >= 0; i--) { MEMORY_BARRIER(); }
+#define WASTE_TIME() for (int16_t i = 0x100; i >= 0; i--) { MEMORY_BARRIER(); }
 
 void minimusic_init(const void *data, uint16_t size)
 {

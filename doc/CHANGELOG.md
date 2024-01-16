@@ -1,5 +1,9 @@
 # MiniMusic changelog
 
+## 2024-01-16
+
+- Added information about dealing with the one macro in the Z80 source code, since macro syntax is heavily assembler dependent and you may need to rewrite it if you use a different assembler.
+
 ## 2023-12-20: Version 1.10
 
 - (GitHub issue #12) Added a new function `MiniMusic_GetStatus` to query what the sound driver is doing. Currently it only reports if BGM is playing.

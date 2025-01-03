@@ -1,5 +1,9 @@
 # MiniMusic changelog
 
+## 2025-01-03: Version 1.11
+
+- Initialization workaround for a real hardware bug (MiniMusic itself was fine, but there's a bug in the VDP and the Z80 can help working around it). Make sure to initialize MiniMusic *before* the VDP.
+
 ## 2024-01-16
 
 - More fixes to the C API (I thought it was already fixed in the last patch? huh?). We really need more people trying it so we can be sure that it works.

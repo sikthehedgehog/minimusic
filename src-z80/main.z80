@@ -6,13 +6,6 @@
 ;*******************************************************************************
 
 Init:
-    ld      sp, 800h                    ; Set up stack
-    
-    ld      a, YMREG_TIMERB             ; Set up timer B frequency
-    ld      (YmAddr1), a                  ; It defaults to around the NTSC
-    ld      a, $C8                        ; refresh rate and is the speed at
-    ld      (YmData1), a                  ; which the tracks tick
-    
     ld      b, 9                        ; 32X PSG fix (see 32X tech bulletin
     ld      hl, BankPort                  ; #22), the 68000 bank must not point
 SetLastBankLoop:                          ; to any cartridge slot or 32X area
@@ -20,6 +13,33 @@ SetLastBankLoop:                          ; to any cartridge slot or 32X area
     djnz    SetLastBankLoop               ; driver never accesses the cartridge
                                           ; we'll just point it to work RAM
                                           ; permanently.
+    
+    ld      hl, PsgPort                 ; Issue a "dummy" command to the PSG (it
+    ld      (hl), $FF                     ; mutes the noise channel). While not
+                                          ; strictly needed (it'll be overriden
+                                          ; by the ADSR quickly), there's a VDP
+                                          ; bug where if the console is reset
+                                          ; after setting up the DMA registers
+                                          ; but before issuing the DMA it can
+                                          ; lock up if the first access is *not*
+                                          ; DMA... unless something else gets on
+                                          ; the bus. So by getting the Z80 on
+                                          ; the 68000 bus as early as possible
+                                          ; we enable working around the bug by
+                                          ; initializing the sound driver before
+                                          ; the VDP is initialized.
+                                          ; Note that this still takes about
+                                          ; 480 68k cycles (plus however long
+                                          ; it takes for the Z80 to wake up) so
+                                          ; make sure to spend some time before
+                                          ; trying to write to video memory.
+    
+    ld      sp, 800h                    ; Set up stack
+    
+    ld      a, YMREG_TIMERB             ; Set up timer B frequency
+    ld      (YmAddr1), a                  ; It defaults to around the NTSC
+    ld      a, $C8                        ; refresh rate and is the speed at
+    ld      (YmData1), a                  ; which the tracks tick
     
     ld      a, YMREG_MODE               ; Start up timer B
     ld      (YmAddr1), a

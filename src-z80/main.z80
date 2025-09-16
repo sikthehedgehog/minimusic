@@ -34,7 +34,7 @@ SetLastBankLoop:                          ; to any cartridge slot or 32X area
                                           ; make sure to spend some time before
                                           ; trying to write to video memory.
     
-    ld      sp, 800h                    ; Set up stack
+    ld      sp, $800                    ; Set up stack
     
     ld      a, YMREG_LFO                ; Set up LFO to a reasonable default
     ld      (YmAddr1), a                  ; (note that it will remain unused if

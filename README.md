@@ -1,6 +1,6 @@
 # MiniMusic
 
-Version 1.11
+Version 1.19
 
 A tiny Z80 sound driver for Mega Drive that runs entirely off Z80 RAM and doesn't access the cartridge slot. This may be useful if you want to play sound while writing back to cartridge Flash, or if you simply want to keep things tiny.
 

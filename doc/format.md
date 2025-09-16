@@ -72,7 +72,7 @@ The following opcodes are available:
 * **`$69 nn`: set instrument.** `nn` is the instrument ID.
 * **`$6A nn` or `$6B nn`: set transpose** (pitch offset), measured in semitones (in two's complement). It takes effect on the next key-on. `$6A` is absolute (`nn` is used as-is), `$6B` is relative (`nn` is added to the current transpose).
 * **`$6C nn` or `$6D nn`: set attenuation** (volume), measured in -0.75dB steps. `$6C` is absolute (`nn` is used as-is), `$6D` is relative (`nn` is added to the current attenuation, in two's complement)
-* **`$6E nn`: set panning.** `nn` bit 7 = left channel on, bit 6 = right channel on, bits 5-0 should be 0. Ignored for PSG channels.
+* **`$6E nn`: set panning, vibrato and tremolo.** `nn` bit 7 = left channel on, bit 6 = right channel on, bits 5-4 = AMS (tremolo intensity), bits 2-0 = PMS (vibrato intensity). Bit 3 should be 0. Ignored for PSG channels.
 
 ## PSG noise channel
 

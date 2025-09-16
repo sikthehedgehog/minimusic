@@ -129,7 +129,7 @@ OP_TRANSP_ABS:          equ $6A     ; Set transpose (absolute)
 OP_TRANSP_REL:          equ $6B     ; Set transpose (relative)
 OP_VOLUME_ABS:          equ $6C     ; Set attenuation (absolute)
 OP_VOLUME_REL:          equ $6D     ; Set attenuation (relative)
-OP_PAN:                 equ $6E     ; Set panning
+OP_PAN:                 equ $6E     ; Set panning, PMS and AMS
 OP_NOISE:               equ $6E     ; Set PSG noise mode
 
 OP_ENDSFX:              equ $6F     ; [internal] Return channel to BGM
@@ -148,6 +148,7 @@ CMD_STOP:               equ $FF     ; Stop music
 ; YM2612 register numbers
 ;*******************************************************************************
 
+YMREG_LFO:              equ $22     ; LFO enable and frequency
 YMREG_TIMERA_HI:        equ $24     ; Timer A frequency (bits 9-2)
 YMREG_TIMERA_LO:        equ $25     ; Timer A frequency (bits 1-0)
 YMREG_TIMERB:           equ $26     ; Timer B frequency

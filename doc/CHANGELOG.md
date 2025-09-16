@@ -1,5 +1,10 @@
 # MiniMusic changelog
 
+## 2025-09-16: Version 1.19
+
+- Added barebones LFO support. Currently there's no way to change the LFO strength (it's hardcoded to 4), but PMS and AMS now can be used as a cheap form of vibrato and tremolo.
+	+ Even though LFO is forced on, this change should still be backwards compatible since it takes no effect unless PMS and AMS are also set (and the format documentation insisted on keeping them reset).
+
 ## 2025-01-03: Version 1.11
 
 - Initialization workaround for a real hardware bug (MiniMusic itself was fine, but there's a bug in the VDP and the Z80 can help working around it). Make sure to initialize MiniMusic *before* the VDP.

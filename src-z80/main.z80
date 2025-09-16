@@ -36,6 +36,13 @@ SetLastBankLoop:                          ; to any cartridge slot or 32X area
     
     ld      sp, 800h                    ; Set up stack
     
+    ld      a, YMREG_LFO                ; Set up LFO to a reasonable default
+    ld      (YmAddr1), a                  ; (note that it will remain unused if
+    ld      a, $08|$04                    ; a channel doesn't set up PMS and
+    ld      (YmData1), a                  ; AMS with opcode OP_PAN). Ideally we
+                                          ; should provide a way to adjust it,
+                                          ; but this will do for now.
+    
     ld      a, YMREG_TIMERB             ; Set up timer B frequency
     ld      (YmAddr1), a                  ; It defaults to around the NTSC
     ld      a, $C8                        ; refresh rate and is the speed at

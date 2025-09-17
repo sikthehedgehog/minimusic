@@ -1,5 +1,9 @@
 # MiniMusic changelog
 
+## 2025-09-17
+
+- Quick tweak to the build script because it turns out that `z80asm` is even more picky than I thought about the command line syntax and was making me miss important errors.
+
 ## 2025-09-16: Version 1.19
 
 - Added barebones LFO support. Currently there's no way to change the LFO strength (it's hardcoded to 4), but PMS and AMS now can be used as a cheap form of vibrato and tremolo.
